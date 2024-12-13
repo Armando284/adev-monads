@@ -1,27 +1,27 @@
 # ADev Monads 🚀
 
-**ADev Monads** es una librería ligera de utilidades funcionales basada en monadas. Proporciona tipos y funciones para trabajar con estructuras como `Option`, `Maybe`, `Either`, entre otras, facilitando flujos de datos seguros y componibles.
+**ADev Monads** is a lightweight functional utility library based on monads. It provides types and functions to work with structures such as `Option`, `Maybe`, `Either`, and others, making data flows safer and composable.
 
 ---
 
-## ✨ Características
+## ✨ Features
 
-- ⚡ **Ligera y Modular**: Diseñada para una fácil extensión con nuevos tipos.
-- 🛠️ **Compatibilidad con TypeScript**: Totalmente tipada para mayor seguridad en el desarrollo.
-- 🌟 **Eficiente**: Implementaciones optimizadas sin dependencias externas.
-- 🔦 **Enfoque en Simplicidad**: Utilidades fáciles de usar.
+- ⚡ **Lightweight and Modular**: Designed for easy extension with new types.
+- 🛠️ **TypeScript Support**: Fully typed for greater development safety.
+- 🌟 **Efficient**: Optimized implementations with no external dependencies.
+- 🔦 **Focus on Simplicity**: Easy-to-use utilities.
 
 ---
 
-## 📦 Instalación
+## 📦 Installation
 
-Usa npm o yarn para instalar el paquete:
+Use npm or yarn to install the package:
 
 ```bash
 npm install adev-monads
 ```
 
-O con yarn:
+Or with yarn:
 
 ```bash
 yarn add adev-monads
@@ -29,51 +29,51 @@ yarn add adev-monads
 
 ---
 
-## 🚀 Rápido Comienzo
+## 🚀 Quick Start
 
-### 🧹 Trabajando con `Option`
+### 🧹 Working with `Option`
 
-El tipo `Option` te permite manejar valores que pueden estar presentes (`some`) o ausentes (`none`).
+The `Option` type allows you to handle values that may be present (`some`) or absent (`none`).
 
 ```typescript
 import { Option } from 'adev-monads';
 
 const value = Option.some(42);
 
-// Verificar si un valor está presente
+// Check if a value is present
 if (value.isSome()) {
-  console.log('Valor presente:', value);
+  console.log('Value present:', value);
 } else {
-  console.log('Sin valor');
+  console.log('No value');
 }
 
-// Transformar el valor si está presente
+// Transform the value if present
 const transformed = value.map((x) => x * 2);
-console.log('Transformado:', transformed.getOrElse(0));
+console.log('Transformed:', transformed.getOrElse(0));
 ```
 
 ---
 
-## 📚 API Completo
+## 📚 Full API
 
 ### `Option`
 
 #### 🛠️ Constructor
 
-- `Option.some<T>(value: T): Option<T>`: Crea una instancia de `Option` con un valor presente.
-- `Option.none<T>(): Option<T>`: Crea una instancia de `Option` sin valor (ausente).
+- `Option.some<T>(value: T): Option<T>`: Creates an `Option` instance with a present value.
+- `Option.none<T>(): Option<T>`: Creates an `Option` instance without a value (absent).
 
-#### 🚨 Métodos Principales
+#### 🚨 Main Methods
 
-- `isNone(): boolean`: Retorna `true` si el valor es `none`.
-- `isSome(): boolean`: Retorna `true` si el valor es `some`.
-- `map<U>(fn: (value: T) => U): Option<U>`: Aplica una función al valor si está presente.
-- `flatMap<U>(fn: (value: T) => Option<U>): Option<U>`: Similar a `map`, pero evita valores anidados.
-- `getOrElse(defaultValue: T): T`: Obtiene el valor o retorna un valor por defecto.
-- `filter(predicate: (value: T) => boolean): Option<T>`: Filtra el valor basado en un predicado.
-- `fold<U, V>(ifNone: () => U, fn: (value: T) => V): U | V`: Maneja ambos casos (`some` y `none`).
+- `isNone(): boolean`: Returns `true` if the value is `none`.
+- `isSome(): boolean`: Returns `true` if the value is `some`.
+- `map<U>(fn: (value: T) => U): Option<U>`: Applies a function to the value if present.
+- `flatMap<U>(fn: (value: T) => Option<U>): Option<U>`: Similar to `map`, but avoids nested values.
+- `getOrElse(defaultValue: T): T`: Gets the value or returns a default value.
+- `filter(predicate: (value: T) => boolean): Option<T>`: Filters the value based on a predicate.
+- `fold<U, V>(ifNone: () => U, fn: (value: T) => V): U | V`: Handles both cases (`some` and `none`).
 
-#### Ejemplo Completo
+#### Full Example
 
 ```typescript
 const option = Option.some(10);
@@ -87,24 +87,55 @@ console.log(result); // 20
 
 ---
 
-## 🤝 Contribuir
+### 📝 `Writer` Monad
 
-Si deseas contribuir a este proyecto:
+The `Writer` monad represents a computation that produces a value along with a log. It's useful in scenarios where you need to track a sequence of messages or actions (e.g., logging, debugging) alongside the result of the computation.
 
-1. 🍷 Haz un fork del repositorio.
-2. 🌱 Crea una rama para tu función: `git checkout -b feature/nueva-funcion`.
-3. ✨ Realiza los cambios necesarios y asegúrate de que las pruebas pasen.
-4. 🔄 Envía un pull request.
+#### Constructor
+
+- `Writer.of<T, W>(value: T, log: W[] = []): Writer<T, W>`: Creates an instance of `Writer` with a value and an optional log.
+- `Writer.tell<W>(message: W): Writer<null, W>`: Creates a `Writer` instance with a log message and no value.
+
+#### Main Methods
+
+- `map<U>(fn: (value: T) => U): Writer<U, W>`: Transforms the value inside the `Writer` using the provided function.
+- `flatMap<U>(fn: (value: T) => Writer<U, W>): Writer<U, W>`: Similar to `map`, but the function returns a new `Writer`, combining logs.
+- `fold<U>(onValue: (value: T) => U, onLog: (log: W[]) => void): U`: Processes both the value and the log with the provided functions.
+- `getValue(): T`: Retrieves the value inside the `Writer`.
+- `getLog(): W[]`: Retrieves the log associated with the `Writer`.
+
+#### Example
+
+```typescript
+import { Writer } from 'adev-monads';
+
+const writer = Writer.of(42, ['initial log']);
+const newWriter = writer.map(x => x * 2);
+const finalWriter = newWriter.flatMap(x => Writer.of(x + 5, ['calculation complete']));
+
+console.log(finalWriter.getValue()); // 89
+console.log(finalWriter.getLog()); // ['initial log', 'calculation complete']
+```
 
 ---
 
-## 🗒 Licencia
+## 🤝 Contributing
 
-Este proyecto está licenciado bajo la licencia [MIT](LICENSE).
+If you want to contribute to this project:
+
+1. 🍷 Fork the repository.
+2. 🌱 Create a branch for your feature: `git checkout -b feature/new-feature`.
+3. ✨ Make the necessary changes and ensure tests pass.
+4. 🔄 Submit a pull request.
 
 ---
 
-## 👨‍💻 Autor
+## 🗒 License
 
-Desarrollado por [Armando Dev](https://armandodev.vercel.app).
+This project is licensed under the [MIT](LICENSE) license.
 
+---
+
+## 👨‍💻 Author
+
+Developed by [Armando Dev](https://armandodev.vercel.app).
