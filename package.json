@@ -1,5 +1,5 @@
 {
-  "name": "adev-lru",
+  "name": "adev-monads",
   "version": "1.0.0",
   "description": "A lightweight library for functional programming monads including Option, Maybe, and more.",
   "main": "dist/index.js",
