@@ -1,27 +1,27 @@
 # ADev Monads 🚀
 
-**ADev Monads** is a lightweight functional utility library based on monads. It provides types and functions for working with structures like `Option`, `Maybe`, `Either`, and more, simplifying safe and composable data flows.
+**ADev Monads** es una librería ligera de utilidades funcionales basada en monadas. Proporciona tipos y funciones para trabajar con estructuras como `Option`, `Maybe`, `Either`, entre otras, facilitando flujos de datos seguros y componibles.
 
 ---
 
-## ✨ Features
+## ✨ Características
 
-- ⚡ **Lightweight and Modular**: Designed for easy extension with new types.
-- 🛠️ **TypeScript Supported**: Fully typed for development safety.
-- 🌟 **Efficient**: Optimized implementations with no external dependencies.
-- 💡 **Focused on Simplicity**: Easy-to-use utilities.
+- ⚡ **Ligera y Modular**: Diseñada para una fácil extensión con nuevos tipos.
+- 🛠️ **Compatibilidad con TypeScript**: Totalmente tipada para mayor seguridad en el desarrollo.
+- 🌟 **Eficiente**: Implementaciones optimizadas sin dependencias externas.
+- 🔦 **Enfoque en Simplicidad**: Utilidades fáciles de usar.
 
 ---
 
-## 📦 Installation
+## 📦 Instalación
 
-Use npm or yarn to install the package:
+Usa npm o yarn para instalar el paquete:
 
 ```bash
 npm install adev-monads
 ```
 
-Or with yarn:
+O con yarn:
 
 ```bash
 yarn add adev-monads
@@ -29,74 +29,82 @@ yarn add adev-monads
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Rápido Comienzo
 
-### 🧩 Working with `Option`
+### 🧹 Trabajando con `Option`
 
-The `Option` type allows you to handle values that may be present (`some`) or absent (`none`).
+El tipo `Option` te permite manejar valores que pueden estar presentes (`some`) o ausentes (`none`).
 
 ```typescript
-import { Option, isSome, isNone, map, getOrElse } from 'adev-monads';
+import { Option } from 'adev-monads';
 
-const value: Option<number> = 42;
+const value = Option.some(42);
 
-// Check if a value is present
-if (isSome(value)) {
-  console.log('Value is present:', value);
+// Verificar si un valor está presente
+if (value.isSome()) {
+  console.log('Valor presente:', value);
 } else {
-  console.log('No value');
+  console.log('Sin valor');
 }
 
-// Transform the value if present
-const transformed = map(value, (x) => x * 2);
-console.log('Transformed:', getOrElse(transformed, 0));
+// Transformar el valor si está presente
+const transformed = value.map((x) => x * 2);
+console.log('Transformado:', transformed.getOrElse(0));
 ```
-
-### 🔮 Other Monads
-
-Upcoming features:
-- 🔗 **Maybe**: Similar to `Option`, with stricter FP semantics.
-- 🔀 **Either**: Handling alternative flows (e.g., errors).
-- ⏳ **Task**: Safe asynchronous operations.
 
 ---
 
-## 📚 Complete API
+## 📚 API Completo
 
 ### `Option`
 
-#### 🛠️ Types
-- `Option<T>`: Represents a `some` (present) or `none` (absent) value.
+#### 🛠️ Constructor
 
-#### 🚦 Main Functions
-- `isNone(option: Option<T>): boolean`: Returns `true` if the value is `none`.
-- `isSome(option: Option<T>): boolean`: Returns `true` if the value is `some`.
-- `map<T, U>(option: Option<T>, fn: (value: T) => U): Option<U>`: Applies a function to the value if present.
-- `flatMap<T, U>(option: Option<T>, fn: (value: T) => Option<U>): Option<U>`: Similar to `map` but avoids nested values.
-- `getOrElse<T>(option: Option<T>, defaultValue: T): T`: Gets the value or returns a default value.
-- `filter<T>(option: Option<T>, predicate: (value: T) => boolean): Option<T>`: Filters the value based on a predicate.
-- `fold<T, U, V>(option: Option<T>, ifNone: () => U, fn: (value: T) => V): U | V`: Handles both `some` and `none` cases.
+- `Option.some<T>(value: T): Option<T>`: Crea una instancia de `Option` con un valor presente.
+- `Option.none<T>(): Option<T>`: Crea una instancia de `Option` sin valor (ausente).
 
----
+#### 🚨 Métodos Principales
 
-## 🤝 Contributing
+- `isNone(): boolean`: Retorna `true` si el valor es `none`.
+- `isSome(): boolean`: Retorna `true` si el valor es `some`.
+- `map<U>(fn: (value: T) => U): Option<U>`: Aplica una función al valor si está presente.
+- `flatMap<U>(fn: (value: T) => Option<U>): Option<U>`: Similar a `map`, pero evita valores anidados.
+- `getOrElse(defaultValue: T): T`: Obtiene el valor o retorna un valor por defecto.
+- `filter(predicate: (value: T) => boolean): Option<T>`: Filtra el valor basado en un predicado.
+- `fold<U, V>(ifNone: () => U, fn: (value: T) => V): U | V`: Maneja ambos casos (`some` y `none`).
 
-If you'd like to contribute to this project:
+#### Ejemplo Completo
 
-1. 🍴 Fork the repository.
-2. 🌿 Create a branch for your feature: `git checkout -b feature/new-feature`.
-3. ✨ Make the necessary changes and ensure tests pass.
-4. 🔃 Submit a pull request.
+```typescript
+const option = Option.some(10);
+const result = option
+  .filter((x) => x > 5)
+  .map((x) => x * 2)
+  .getOrElse(0);
 
----
-
-## 📝 License
-
-This project is licensed under the [MIT](LICENSE) license.
+console.log(result); // 20
+```
 
 ---
 
-## 👨‍💻 Author
+## 🤝 Contribuir
 
-Developed by [Armando Dev](https://armandodev.vercel.app).
+Si deseas contribuir a este proyecto:
+
+1. 🍷 Haz un fork del repositorio.
+2. 🌱 Crea una rama para tu función: `git checkout -b feature/nueva-funcion`.
+3. ✨ Realiza los cambios necesarios y asegúrate de que las pruebas pasen.
+4. 🔄 Envía un pull request.
+
+---
+
+## 🗒 Licencia
+
+Este proyecto está licenciado bajo la licencia [MIT](LICENSE).
+
+---
+
+## 👨‍💻 Autor
+
+Desarrollado por [Armando Dev](https://armandodev.vercel.app).
 
