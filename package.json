@@ -2,10 +2,22 @@
   "name": "adev-monads",
   "version": "2.1.0",
   "description": "A lightweight library for functional programming monads including Option, Maybe, and more.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
+  "types": "dist/types/index.d.ts",
+  "type": "module",
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
-    "build": "tsc",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:types": "tsc --project tsconfig.types.json",
+    "build": "npm run build:types && npm run build:esm && npm run build:cjs",
     "test": "jest",
     "lint": "ts-standard --fix --clear-cache",
     "prepare": "npm run build",
